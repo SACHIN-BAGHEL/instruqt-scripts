@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# CONTENT=$(curl https://${HOSTNAME}.${INSTRUQT_PARTICIPANT_ID}.instruqt.io/entando-de-app/en/s_p_tableau.page)  
+CONTENT=$(curl -L http://quickstart-entando.192.168.29.182.nip.io/entando-de-app/en/tableau.page)
+echo "<=========== test the url in check script ===========> "
+echo "<<<<<<<<<< " https://${HOSTNAME}.${INSTRUQT_PARTICIPANT_ID}.instruqt.io/entando-de-app/en/s_p_tableau.page
+
+#Checking for Tableau widget
+flag=`echo $CONTENT|awk '{print match($0,"https://public.tableau.com/views/RegionalSampleWorkbook/Economy")}'`;
+if [ $flag -gt 0 ];then
+    echo "Tableau widget Success";
+    #Checking for About US content
+    about=`echo $CONTENT|awk '{print match($0,"By integrating leading edge open source projects and extending their capabilities, Entando allows developers and operations teams to create modern UX on Kubernetes.")}'`;
+    if [ $about -gt 0 ];then
+        echo "About us Success";
+            #Checking for Logo
+            logo=`echo $CONTENT|awk '{print match($0,"/entando-de-app/resources/static/img/Entando_light.svg")}'`;
+            if [ $logo -gt 0 ];then
+                echo "Logo Success";
+            else
+                echo "Logo fail";
+                #fail-message "Logo is not added, Please follow the instruction to Add Logo"
+            fi
+    else
+        echo "About US fail";
+        #fail-message "About US content is not created, Please follow the instruction to create one"
+    fi
+else
+    echo "Tableau widget fail";
+    #fail-message "Tableau widget is not created, Please follow the instruction to create one"
+fi
+
+
+
