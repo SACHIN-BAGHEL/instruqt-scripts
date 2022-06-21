@@ -9,6 +9,13 @@ sudo kubectl apply -f https://raw.githubusercontent.com/entando/entando-releases
 sudo kubectl apply -n entando -f https://raw.githubusercontent.com/entando/entando-releases/v7.0.0/dist/ge-1-1-6/namespace-scoped-deployment/namespace-resources.yaml
 
 curl -sLO "https://raw.githubusercontent.com/entando/entando-releases/v7.0.0/dist/ge-1-1-6/samples/entando-app.yaml"
+
+if [ -e entando-app.yaml ]
+then
+    echo "entando-app.yaml ok"
+else
+    echo "entando-app.yaml no ok"
+fi
 sed -i 's/  ingressHostName: YOUR-HOST-NAME/  ingressHostName: '${HOSTNAME}.${INSTRUQT_PARTICIPANT_ID}'.instruqt.io/g' entando-app.yaml
 sed -i 's/  environmentVariables: null/  environmentVariables:/g' entando-app.yaml
 sed -i '9i\    - name: "APPLICATIONBASEURL"' entando-app.yaml
@@ -17,6 +24,12 @@ sed -i '10i\      value: "https://'${HOSTNAME}.${INSTRUQT_PARTICIPANT_ID}'.instr
 chmod 777 entando-app.yaml
 
 curl -sLO "https://raw.githubusercontent.com/entando/entando-releases/v7.0.0/dist/ge-1-1-6/samples/entando-operator-config.yaml"
+if [ -e entando-operator-config.yaml ]
+then
+    echo "entando-operator-config.yaml ok"
+else
+    echo "entando-operator-config.yaml no ok"
+fi
 sed -i "8i\  entando.tls.secret.name: entando-tls-secret" entando-operator-config.yaml
 
 sudo kubectl apply -f entando-operator-config.yaml -n entando
@@ -33,8 +46,6 @@ do
     sleep 5
 done
 echo '****************Entando is started****************'
-
-cd ..
 
 echo "==============================END entando installation =============================="
 
